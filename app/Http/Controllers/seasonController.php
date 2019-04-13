@@ -14,26 +14,11 @@ class seasonController extends Controller
             'serie_id'=>'required|string',
             'number_season'=>'required',
         ]);
-        $posterPath='';
-        if($request->input('poster')){
-            $filePoster = str_replace('data:image/jpeg;base64,','',$request->input('poster')) ;
-            $filePoster = str_replace(' ', '+', $filePoster);
-            $posterPath = 'posters/'.str_random(40).'.'.'jpg';
-            Storage::disk('public')->put($posterPath, base64_decode($filePoster));
-        }
-        $BannerPath='';
-        if($request->input('banner')){
-            $fileBanner = str_replace('data:image/jpeg;base64,','',$request->input('banner')) ;
-            $fileBanner = str_replace(' ', '+', $fileBanner);
-            $BannerPath = 'banners/'.str_random(40).'.'.'jpg';
-            Storage::disk('public')->put($BannerPath, base64_decode($fileBanner));
-        }
-
         Season::create([
             'serie_id'=>$request->serie_id,
             'number_season'=>$request->number_season,
-            'poster'=>$posterPath!=''?Storage::url($posterPath):null,
-            'banner'=>$BannerPath!=''?Storage::url($BannerPath):null,
+            'poster'=> $request->file('poster')?$request->file('poster')->store('posters','public'):null,
+            'banner'=> $request->file('banner')?$request->file('banner')->store('banners','public'):null,
         ]);
 
         return response()->json(['message' => 'Season creada'], 201);

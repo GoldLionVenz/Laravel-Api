@@ -51,7 +51,8 @@ class AuthController extends Controller
             $avatarPath='avatars/'.str_random(20).'.png';
             Storage::disk('public')->put($avatarPath, (string) $avatar);
         }
-        
+        $user->active = true;
+        $user->activation_token = '';
         $user->avatar=Storage::url($avatarPath);
         $user->save();
         //$user->notify(new SignupActivate($user));
@@ -144,6 +145,32 @@ class AuthController extends Controller
             'user_name'=>$user->user_name,
             'avatar'=>url($user->avatar) 
         ];
+    }
+
+    public function userUnReadNotications(Request $request)
+    {
+        return $request->user()->unreadNotifications;
+    }
+    public function userNotications(Request $request)
+    {
+        return $request->user()->notifications;
+    }
+    public function markAsRead(Request $request)
+    {
+        $notification=$request->user()->notifications->find($request->notification);
+        if($notification){
+            $notification->markAsRead();
+            return response()->json(['message' => 'Notification mark as read'], 201);
+        }
+        else{
+            return response()->json(['message' => 'Notification not found'], 401);
+        }
+    }
+
+    public function markAsReadAllNotification(Request $request)
+    {
+        $request->user()->unreadNotifications->markAsRead();
+        return response()->json(['message' => 'Notifications mark as read'], 201);
     }
 
     public function signupActivate($token)

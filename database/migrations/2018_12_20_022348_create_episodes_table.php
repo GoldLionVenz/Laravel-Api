@@ -17,7 +17,7 @@ class CreateEpisodesTable extends Migration
             $table->string('id')->unique();
             $table->string('title');
             $table->string('video');
-            $table->string('subtitle');
+            $table->longText('subtitle');
             $table->smallInteger('number_episode');
             $table->text('plot');
             $table->double('imdbRating', 2, 1);

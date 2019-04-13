@@ -17,14 +17,14 @@ class Season extends Model
         if (!$poster || starts_with($poster, 'http')) {
             return $poster;
         }
-         return URL::to('/').''.$poster;
+         return URL::to('/').'/storage/'.$poster;
     }
     public function getBannerAttribute($banner)
     {
         if (!$banner || starts_with($banner, 'http')) {
             return $banner;
         }
-         return URL::to('/').''.$banner;
+         return URL::to('/').'/storage/'.$banner;
     }
     public function episodes(){
         return $this->hasMany(Episode::class);

@@ -12,15 +12,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $series=factory(App\Serie::class,10)->create();
+        $series=factory(App\Serie::class,20)->create();
         $series->each(function(App\Serie $serie) use ($series) {
             $count=1;
             for($i=0;$i<random_int(1,7);$i++){
-                factory(App\Season::class)
+                $season=factory(App\Season::class)
                     ->create([
                         'serie_id'=>$serie->id,
                         'number_season'=>$count++
                         ]);
+                $numEpisode=1;
+                for ($j=0; $j < random_int(7,13); $j++) { 
+                    $episode=factory(App\Episode::class)
+                            ->create([
+                                'season_id'=>$season->id,
+                                'number_episode'=>$numEpisode++
+                            ]);
+                }
             }
         });
         // $this->call(UsersTableSeeder::class);
